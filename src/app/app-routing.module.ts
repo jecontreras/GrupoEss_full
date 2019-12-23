@@ -3,7 +3,6 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)},
   {
     path: 'categoria',
     loadChildren: () => import('./page/categoria/categoria.module').then( m => m.CategoriaPageModule)
@@ -13,11 +12,15 @@ const routes: Routes = [
     loadChildren: () => import('./page/chat/chat.module').then( m => m.ChatPageModule)
   },
   {
-    path: 'chat-view',
+    path: 'chat_view',
     loadChildren: () => import('./page/chat-view/chat-view.module').then( m => m.ChatViewPageModule)
   },
   {
-    path: 'chequiar',
+    path: 'chat_view/:id',
+    loadChildren: () => import('./page/chat-view/chat-view.module').then( m => m.ChatViewPageModule)
+  },
+  {
+    path: 'chech',
     loadChildren: () => import('./page/chequiar/chequiar.module').then( m => m.ChequiarPageModule)
   },
   {
@@ -37,7 +40,11 @@ const routes: Routes = [
     loadChildren: () => import('./page/listproduct/listproduct.module').then( m => m.ListproductPageModule)
   },
   {
-    path: 'notificaciones',
+    path: 'listproduct/:id',
+    loadChildren: () => import('./page/listproduct/listproduct.module').then( m => m.ListproductPageModule)
+  },
+  {
+    path: 'notificacion',
     loadChildren: () => import('./page/notificaciones/notificaciones.module').then( m => m.NotificacionesPageModule)
   },
   {
@@ -53,9 +60,22 @@ const routes: Routes = [
     loadChildren: () => import('./page/product/product.module').then( m => m.ProductPageModule)
   },
   {
-    path: 'productview',
+    path: 'productoview',
     loadChildren: () => import('./page/productview/productview.module').then( m => m.ProductviewPageModule)
   },
+  {
+    path: 'productoview/:id',
+    loadChildren: () => import('./page/productview/productview.module').then( m => m.ProductviewPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./logeo/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'registro',
+    loadChildren: () => import('./logeo/registro/registro.module').then( m => m.RegistroPageModule)
+  },
+
 ];
 
 @NgModule({

@@ -19,6 +19,8 @@ ionic cordova platform rm ios
 ///////////////////////////////////////////////777
 deploy pwa
 
+ng add @angular/pwa
+
 1. firebase login
 2. firebase init
 3. firevase user --add key del a app firebase

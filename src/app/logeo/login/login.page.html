@@ -1,0 +1,42 @@
+<ion-content id="ion-content-login">
+  <br><br>
+  <ion-toolbar id="ion-content-login">
+    <div class="ion-text-center">
+        <img class="logo2" [src]="'./assets/imagenes/Logo2.png'">
+    </div>
+  </ion-toolbar>
+  <form [formGroup]="myForm_login" (ngSubmit)="submit_login()">
+    <ion-list lines="full" class="ion-no-margin ion-no-padding">
+      <ion-item>
+        <ion-label class="ion-color-lavel" position="stacked">Correo Electronico <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input class="ion-color-lavel" formControlName="email" required type="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label class="ion-color-lavel" position="stacked">Contraseña <ion-text color="danger">*</ion-text>
+        </ion-label>
+        <ion-input class="ion-color-lavel" formControlName="password" required type="password"></ion-input>
+      </ion-item>
+    </ion-list>
+  </form>
+  <br>
+  <br>
+  <div class="ion-text-center">
+    <div>
+      <ion-button (click)="submit_login()" class=".ion-button-login button_col" color="dark">INICIAR SESIÓN</ion-button>
+    </div>
+    <ion-text class="ion-color-lavel">
+      <h6>¿Olvidaste tu contraseña?</h6>
+    </ion-text>
+  </div>
+  <ion-toolbar id="ion-content-login">
+    <div class="ion-text-center">
+      <div>
+        <ion-button (click)="open_registro()" class=".ion-button-login button_col" color="dark">CREAR CUENTA</ion-button>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-content>
+<!-- <ion-footer>
+  
+</ion-footer> -->

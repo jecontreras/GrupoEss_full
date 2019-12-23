@@ -1,3 +1,71 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+
+  <ion-split-pane when="md" contentId="principal">
+
+
+    <!-- <app-menu></app-menu> -->
+    <ion-menu side="start" menuId="primerMenu" contentId="principal">
+      <ion-header translucent>
+        <ion-toolbar class="ion-padding" color="dark">
+          <div>
+            <ion-avatar class="perfil">
+              <img [src]=" data.foto || 'https://gravatar.com/avatar/dba6bae8c566f9d4041fb9cd9ada7741?d=identicon&f=y'">
+            </ion-avatar>
+          </div>
+        </ion-toolbar>
+        <ion-toolbar color="dark">
+          <ion-buttons slot="secondary">
+            <ion-button class="ion-padding-top" [routerLink]="['/perfil']">
+              <ion-icon slot="icon-only" name="arrow-dropdown"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-title>
+            <h6>{{ data.name || 'Visitante' }}</h6>
+          </ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+
+          <ion-menu-toggle autoHide="false" *ngFor="let c of componentes | async">
+            <ion-item [routerLink]="c.redirectTo">
+              <ion-icon slot="start" [name]="c.icon"></ion-icon>
+              <ion-label>{{ c.name }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item *ngIf="!data.id" (click)="iniciar_seccion()">
+              <ion-icon slot="start" name="man"></ion-icon>
+              <ion-label>
+                <h6>Iniciar sesion</h6>
+              </ion-label>
+            </ion-item>
+            <ion-item [routerLink]="['/perfil']">
+              <ion-icon slot="start" name="person"></ion-icon>
+              <ion-label>
+                <h6>Perfil</h6>
+              </ion-label>
+            </ion-item>
+            <ion-item *ngIf="data.id" (click)="cerrar_seccion()">
+              <ion-icon slot="start" name="walk"></ion-icon>
+              <ion-label>
+                <h6>Cerrar sesion</h6>
+              </ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+
+
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+
+
+
+
+    <ion-router-outlet id="principal"></ion-router-outlet>
+
+  </ion-split-pane>
+
+
+
 </ion-app>

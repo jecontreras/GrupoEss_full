@@ -1,9 +1,114 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>listproduct</ion-title>
+  <ion-toolbar color="dark">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="2">
+          <ion-buttons>
+            <ion-menu-button>
+              <ion-icon class="padding_menu" size="large" name="menu"></ion-icon>
+            </ion-menu-button>
+          </ion-buttons>
+        </ion-col>
+        <ion-col size="8">
+          <ion-title class="ion-padding-top">
+            Productos
+          </ion-title>
+        </ion-col>
+        <ion-col size="2">
+          <ion-icon class="logo_notificacion" size="large" name="cart" [routerLink]="['/chech']"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
+<ion-content padding>
+  <ion-row>
+    <ion-col>
+      <ion-searchbar placeholder="Buscar Ecomerce" [(ngModel)]="searchtxt" (change)="search()"> </ion-searchbar>
+    </ion-col>
+  </ion-row>
+  <ion-list>
+    <ion-item>
+      <ion-text color="dark" slot="start">
+        <h6> Filtro </h6>
+      </ion-text>
+      <ion-text color="dark">
+        <h6> {{ list_articulo.count + " Resultados" }} </h6>
+      </ion-text>
+      <ion-text color="dark" slot="end">
+        <h6> Ordenar Por </h6>
+      </ion-text>
+    </ion-item>
+    <ion-item>
+      <ion-toolbar>
+        <ion-slides [options]="slideOptsOne">
+          <ion-slide>
+            <ion-chip (click)="query.where={opcion: 'activo'}; search('todos')">
+              <ion-text color="dark">
+                <ion-label>Todos</ion-label>
+              </ion-text>
+            </ion-chip>
+          </ion-slide>
 
-<ion-content>
+          <ion-slide (click)="query.where.subasta=true; search('estado')">
+            <ion-chip>
+              <ion-text color="dark">
+                <ion-label>Subasta</ion-label>
+              </ion-text>
+            </ion-chip>
+          </ion-slide>
 
+          <ion-slide>
+            <ion-chip (click)="query.costoventa='costoventa asc'; search('precio')">
+              <ion-text color="dark">
+                <ion-label>¡Cómpralo ahora!</ion-label>
+              </ion-text>
+            </ion-chip>
+          </ion-slide>
+        </ion-slides>
+      </ion-toolbar>
+    </ion-item>
+    <ion-item>
+      <ion-select placeholder="Estado" [(ngModel)]="query.where.estado" slot="start">
+        <ion-select-option value="nuevo">Nuevo</ion-select-option>
+        <ion-select-option value="usado">Usado</ion-select-option>
+        <ion-select-option value="especificar">Sin especificar</ion-select-option>
+      </ion-select>
+      <ion-select placeholder="Precio" [(ngModel)]="query.where.costoventa" slot="end">
+        <ion-select-option value="costoventa asc">De menor a mayor</ion-select-option>
+        <ion-select-option value="costoventa desc">De mayor a menor</ion-select-option>
+        <ion-select-option value="todos">Todos</ion-select-option>
+      </ion-select>
+      <ion-button slot="end" color="dark" (click)="search('precio')">
+        <ion-label>Buscar</ion-label>
+      </ion-button>
+      <!-- <ion-text color="dark" slot="end">
+        <h6> Todos los filtros </h6>
+      </ion-text> -->
+    </ion-item>
+    <!-- <ion-item>
+      <ion-item-divider>
+        <ion-text color="dark">
+          <h6>¡Quires decir traffic (56)?</h6>
+        </ion-text>
+      </ion-item-divider>
+    </ion-item> -->
+  </ion-list>
+  <div>
+
+  </div>
+  <ion-list>
+    <ion-item *ngFor="let item of list_articulo.data" [routerLink]="['/productoview', item.id]" class="p-1">
+      <div slot="start">
+        <img class="img_dimenciones rounded" [src]="item.foto">
+      </div>
+      <ion-label>
+        <h2>{{ item.titulo }}</h2>
+        <h3>{{ item.estado }}</h3>
+        <p>{{ item.costopromosion || item.costoventa  }}</p>
+        <p>¡Compralo ahora!</p>
+        <p>{{ item.envio || 'envio'}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

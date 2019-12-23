@@ -3,6 +3,34 @@
 
 /** Ionic CSS Variables **/
 :root {
+  #ion-content-login {
+    --ion-background-color:#ffffff;
+}
+.prev-icon-custom{
+  --background: url(../assets/imagenes/dilisap1.png) 0 0/100% 100% no-repeat;
+}
+.prev-icon-custom.disabled{
+    --opacity: 0.4;
+    --cursor: default;
+}
+.titulocolor{
+  --color: #30D956;
+}
+.button_col{
+  --background: #2D9444;
+  --color: white;
+}
+.next-icon-custom{
+    --background: url(../assets/imagenes/dilisap1.png) 0 0/100% 100% no-repeat;
+}
+@font-face {
+  font-family: 'EB Garamond', serif;
+  src: url('../assets/font/font.woff2');//mine
+}
+
+* {
+  font-family: 'ABeeZee', sans-serif;
+}
   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
@@ -52,7 +80,7 @@
   --ion-color-danger-tint: #f25454;
 
   /** dark **/
-  --ion-color-dark: #222428;
+  --ion-color-dark: black;
   --ion-color-dark-rgb: 34, 34, 34;
   --ion-color-dark-contrast: #ffffff;
   --ion-color-dark-contrast-rgb: 255, 255, 255;

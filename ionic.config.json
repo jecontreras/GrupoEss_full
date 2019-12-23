@@ -1,5 +1,7 @@
 {
-  "name": "GrupoEss",
-  "integrations": {},
+  "name": "Grupo Ess",
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

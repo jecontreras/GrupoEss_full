@@ -1,9 +1,44 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>guardados</ion-title>
+  <ion-toolbar color="dark">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="2">
+         <ion-buttons>
+            <ion-menu-button>
+              <ion-icon class="padding_menu" size="large" name="menu"></ion-icon>
+            </ion-menu-button>
+          </ion-buttons>
+        </ion-col>
+        <ion-col size="8">
+          <ion-title class="ion-padding-top">
+            Guardados
+          </ion-title>
+        </ion-col>
+        <ion-col size="2">
+          <ion-icon class="logo_notificacion" size="large" name="cart" [routerLink]="['/chech']"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
-
-<ion-content>
-
+<ion-content padding>
+  <ion-list>
+    <ion-item *ngFor="let item of list_articulo" [routerLink]="['/productoview', item.id]" class="p-1">
+      <div slot="start">
+        <img class="img_dimenciones rounded" [src]="item.foto">
+      </div>
+      <ion-label>
+        <h2>{{ item.titulo }}</h2>
+        <h3>{{ item.estado }}</h3>
+        <p>{{ item.costopromosion || item.costoventa  }}</p>
+        <p>¡Compralo ahora!</p>
+        <p>{{ item.envio || 'envio'}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+  <div class="ion-text-center" *ngIf="list_articulo.length === 0">
+    <ion-text colo="dark">
+      <span>Lista Vacia</span>
+    </ion-text>
+  </div>
 </ion-content>

@@ -1,9 +1,128 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>home</ion-title>
+  <ion-toolbar color="dark">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="2">
+          <ion-buttons>
+            <ion-menu-button>
+              <ion-icon class="padding_menu" size="large" name="menu"></ion-icon>
+            </ion-menu-button>
+          </ion-buttons>
+        </ion-col>
+        <ion-col size="8">
+          <ion-title class="ion-padding-top">
+            <img class="logo" [src]="'./assets/imagenes/Logo.png'">
+          </ion-title>
+        </ion-col>
+        <ion-col size="2">
+          <ion-icon class="logo_notificacion" size="large" name="cart" [routerLink]="['/chech']"></ion-icon>
+        </ion-col>
+        <ion-col size="12">
+          <ion-searchbar placeholder="Buscar Grupo Ess" animated [(ngModel)]="searchtxt" (change)="search($event)">
+          </ion-searchbar>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-segment 
+              scrollable 
+              mode="md" 
+              color="primary"
+              class="bg_secondary_light text-white"
+              (ionChange)="cambioCategoria( )"
+            >
+    <ion-segment-button mode="md" *ngFor="let s of sliderOne.slidesItems">
+      <ion-chip class="btn_home bg-dark text-white">
+        <ion-text>
+          <ion-label text-capitalize> {{ s.categoria }}</ion-label>
+        </ion-text>
+      </ion-chip>
+    </ion-segment-button>
 
+  </ion-segment>
+  <!-- <ion-slides [options]="slideOptsOne" class="p-3 mb-2 bg_secondary_light text-white">
+    <ion-slide *ngFor="let s of sliderOne.slidesItems">
+      <ion-chip [routerLink]="['/listproduct', 123]" class="btn_home bg-dark text-white">
+        <ion-text>
+          <ion-label>{{ s.categoria }}</ion-label>
+        </ion-text>
+      </ion-chip>
+    </ion-slide>
+  </ion-slides> -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullMin="100" pullMax="100">
+    <ion-refresher-content>
+    </ion-refresher-content>
+  </ion-refresher>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-text color="dark">
+          <label>Categorias</label>
+        </ion-text>
+      </ion-col>
+      <ion-col *ngFor="let s of sliderOne.slidesItems" size="4" [routerLink]="['/listproduct', 123]" class="border">
+        <img [src]="s.foto || './assets/imagenes/categoria.jpeg'" class="rounded">
+        <div class="ion-text-center">
+          <ion-text>
+            <ion-label>{{ s.categoria }}</ion-label>
+          </ion-text>
+        </div>
+      </ion-col>
+      <ion-col size="12">
+        <div class="p-3 mb-2 bg_dark_ text-white">
+          <ion-text>
+            <label> La tarjeta Gold esta esperandote. </label>
+            <h6>PREGUNTALA AQUI <ion-icon name="send"></ion-icon>
+            </h6>
+          </ion-text>
+          <img [src]="'./assets/imagenes/gold.png'">
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngFor="let item of data_app.detalleslist">
+    <ion-row class="p-3">
+      <ion-item-divider>
+        <ion-col size="10">
+          <ion-text>
+            <ion-label color="dark">{{ item.titulo }}</ion-label>
+            <!-- <ion-chip outline color="primary"> -->
+            <!-- </ion-chip> -->
+          </ion-text>
+        </ion-col>
+        <ion-col size="2">
+          <ion-text>
+            <ion-label color="primary" [routerLink]="['/listproduct', item.valor]">Más</ion-label>
+          </ion-text>
+        </ion-col>
+      </ion-item-divider>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12">
+        <ion-slides pager="false" [options]="slideOptsTho" #slideWithNav
+          (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
+          <ion-slide *ngFor="let off of item.articulos" [routerLink]="['/productoview', off.id]">
+            <ion-row>
+              <ion-col size="12">
+                <img [src]=" off.foto" class="img_dimenciones">
+                <ion-text color="dark">
+                  <h6 class="text">
+                  <strong>{{ off.titulo }}</strong>
+                  </h6>
+                </ion-text>
+                <ion-text color="primary">
+                  <h6 class="text">
+                    $ {{ (off.costopromosion || off.costoventa).toLocaleString('de-DE', { style: 'currency', currency: 'COP' }) }}
+                  </h6>
+                </ion-text>
+              </ion-col>
+            </ion-row>
+          </ion-slide>
+        </ion-slides>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>

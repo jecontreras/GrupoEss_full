@@ -24,3 +24,37 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+.text{
+    font-size:11px;
+}
+.mouse{
+    cursor: pointer;
+}
+.img_dimenciones{
+    height: 177px;
+    width: 119px;
+    align-items: center;
+}
+.logo_notificacion{
+    padding-top: 10px;
+}
+.logo{
+    height: 38px;
+}
+.logo2{
+    height: 50px;
+}
+.negro{
+    background-color: black;
+}
+
+.padding_menu {
+    padding-top: 8px;
+}
+.h6_margin{
+    margin-left: 13px;
+}
+.paddin_grid{
+    padding: 0px !important;
+}

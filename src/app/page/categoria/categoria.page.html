@@ -1,9 +1,46 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>categoria</ion-title>
+  <ion-toolbar color="dark">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="2">
+         <ion-buttons>
+            <ion-menu-button>
+              <ion-icon class="padding_menu" size="large" name="menu"></ion-icon>
+            </ion-menu-button>
+          </ion-buttons>
+        </ion-col>
+        <ion-col size="8">
+          <ion-title class="ion-padding-top">
+            Categoria
+          </ion-title>
+        </ion-col>
+        <ion-col size="2">
+          <ion-icon class="logo_notificacion" size="large" name="cart" [routerLink]="['/chech']"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
-
-<ion-content>
-
+<ion-content padding>
+  <!-- <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullMin="100" pullMax="100">
+    <ion-refresher-content>
+    </ion-refresher-content>
+  </ion-refresher> -->
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12">
+        <ion-text color="dark">
+          <label>Categorias</label>
+        </ion-text>
+      </ion-col>
+      <ion-col *ngFor="let s of list_categoria" size="4" [routerLink]="['/listproduct', 123]">
+        <img src="./assets/imagenes/categoria.jpeg" class="rounded">
+        <div class="ion-text-center">
+          <ion-text>
+            <ion-label>{{ s.categoria }}</ion-label>
+          </ion-text>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
