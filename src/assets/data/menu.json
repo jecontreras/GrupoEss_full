@@ -11,7 +11,7 @@
     },
     {
       "icon": "mail-unread",
-      "name": "Mensaje",
+      "name": "Chat",
       "redirectTo": "/chat"
     },
     {

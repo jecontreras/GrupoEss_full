@@ -36,7 +36,10 @@ export class RegistroPage implements OnInit {
   }
 
   ngOnInit() { }
-
+  
+  cerrar(){
+    this.cerrarModal();
+  }
   create_form() {
     return this.formBuilder.group({
       name: ['', Validators.required],

@@ -1,25 +1,19 @@
-<ion-header>
-  <ion-toolbar color="dark">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="2">
-         <ion-buttons>
-            <ion-menu-button>
-              <ion-icon class="padding_menu" size="large" name="menu"></ion-icon>
-            </ion-menu-button>
-          </ion-buttons>
-        </ion-col>
-        <ion-col size="8">
-          <ion-title class="ion-padding-top">
-            Categoria
-          </ion-title>
-        </ion-col>
-        <ion-col size="2">
-          <ion-icon class="logo_notificacion" size="large" name="cart" [routerLink]="['/chech']"></ion-icon>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+<ion-header no-border translucent>
+
+  <ion-toolbar>
+    <ion-buttons slot="start" color="primary">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-text>
+      <ion-label>
+        Categoria
+      </ion-label>
+    </ion-text>
+    <ion-button color="primary" fill="clear" slot="end" [routerLink]="['/chech']">
+      <ion-icon class="logo_notificacion" size="large" name="cart" [routerLink]="['/chech']"></ion-icon>
+    </ion-button>
   </ion-toolbar>
+
 </ion-header>
 <ion-content padding>
   <!-- <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullMin="100" pullMax="100">

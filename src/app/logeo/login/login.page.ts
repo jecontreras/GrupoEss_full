@@ -37,7 +37,9 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() { }
-
+  cerrar(){
+    this.cerrarModal();
+  }
   create_form() {
     return this.formBuilder.group({
       email: ['', Validators.required],

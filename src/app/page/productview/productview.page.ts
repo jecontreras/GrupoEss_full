@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
-import { IonSlides } from '@ionic/angular';
+import { IonSlides, ModalController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ARTICULOS } from 'src/app/redux/interfax/articulos';
@@ -12,6 +12,7 @@ import { LoadingController, ToastController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { DialogService } from 'src/app/service-component/dialog.service';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { BuscadorComponent } from 'src/app/components/buscador/buscador.component';
 
 @Component({
   selector: 'app-productview',
@@ -32,10 +33,6 @@ export class ProductviewPage implements OnInit {
   public loading:any;
 
   @ViewChildren('slideWithNav') slideWithNav: IonSlides;
-  @ViewChildren('slideWithNav2') slideWithNav2: IonSlides;
-  @ViewChildren('slideWithNav3') slideWithNav3: IonSlides;
-  @ViewChildren('slideWithNav4') slideWithNav4: IonSlides;
-  @ViewChildren('slideWithNav5') slideWithNav5: IonSlides;
   public img = "./assets/imagenes/dilisap1.png";
   sliderOne: any;
   sliderTho: any = {
@@ -48,35 +45,17 @@ export class ProductviewPage implements OnInit {
     isEndSlide: false,
     slidesItems:Array()
   };
-  sliderFoor: any;
-  sliderFive: any;
-  //Configuration for each Slider
-  slideOptsOne = {
+  public slideOptsTho = {
     initialSlide: 0,
     slidesPerView: 1,
     autoplay: true
   };
-  slideOptsTho = {
+  public slideOptsFoor = {
     initialSlide: 0,
-    slidesPerView: 3,
+    slidesPerView: 2,
     autoplay: false
   };
-  slideOptsThree = {
-    initialSlide: 0,
-    slidesPerView: 3,
-    autoplay: false
-  };
-  slideOptsFoor = {
-    initialSlide: 0,
-    slidesPerView: 3,
-    autoplay: false
-  };
-  slideOptsFive = {
-    initialSlide: 0,
-    slidesPerView: 3,
-    autoplay: false
-  };
-
+  sliderFoor: any;
 
   constructor(
     private router: Router,
@@ -89,7 +68,8 @@ export class ProductviewPage implements OnInit {
     public alertController: AlertController,
     public loadingController: LoadingController,
     private _Dialog_login: DialogService,
-    private socialSharing: SocialSharing
+    private socialSharing: SocialSharing,
+    private modalCtrl: ModalController
   ) {
     console.log("hola")
     this._store.select("name")
@@ -99,25 +79,27 @@ export class ProductviewPage implements OnInit {
         this.data_user2 = store.usuario;
         this.list_productos = store.articulos;
       });
-    this.init();
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.sliderOne =
       {
         isBeginningSlide: true,
         isEndSlide: false,
         slidesItems: []
       };
+      this.loadings();
+      this.init();
+  }
+  async loadings(){
+    this.loading = await this.loadingController.create({
+      spinner: 'crescent',
+      message: 'Iniciando...',
+      translucent: true,
+      cssClass: 'custom-class custom-loading'
+    });
 
-       this.loading = await this.loadingController.create({
-        spinner: 'crescent',
-        message: 'Iniciando...',
-        translucent: true,
-        cssClass: 'custom-class custom-loading'
-      });
-
-      await this.loading.present();
+    await this.loading.present();
   }
   doRefresh(ev){
     this.ev = ev;
@@ -138,6 +120,7 @@ export class ProductviewPage implements OnInit {
           }
           if(!rta.data[0]) return this.ocultar_disable()
           this.data = rta.data[0];
+          this.data.Califica=4;
           this.data.precio_ofrece = this.data.costoventa;
           if(!this.data) return false;
           this.data.cantida_adquiridad = String(1);
@@ -153,6 +136,13 @@ export class ProductviewPage implements OnInit {
           this.data_referecencia_articulo();
           this.get_galeria(this.data.id);
           this.get_ofertarlo();
+        }, (err)=>{
+          if(this.ev){
+            this.disable_list = true;
+            if(this.ev.target){
+              this.ev.target.complete();
+            }
+          }
         });
       }
     });
@@ -226,7 +216,7 @@ export class ProductviewPage implements OnInit {
       }else{
         this.sliderOne.slidesItems.push({id: 1, foto: "https://hostel.keralauniversity.ac.in/images/NoImage.jpg"})
       }
-      this.loading.dismiss();
+      if(this.loading) this.loading.dismiss();
     },(err)=>{
       this.presentToast('Error galeria no encontrada');
       this.loading.dismiss();
@@ -239,6 +229,7 @@ export class ProductviewPage implements OnInit {
     this._store.dispatch(accion);
     if (opt === 'comprar') this.router.navigate(['chech']);
     else this.presentToast('Producto Agregado al Cart');
+    this.router.navigate(['/chech']);
   }
   async presentToast(msg) {
     const toast = await this.toastController.create({
@@ -321,6 +312,14 @@ export class ProductviewPage implements OnInit {
     //   '',
     //   this.data.url
     // );
+  }
+  async openEndSearch(){
+    /*const modal = await this.modalCtrl.create({
+      component: BuscadorComponent,
+      componentProps: {},
+    });
+    modal.present();*/
+    this.router.navigate(['/listproduct', 'buscador']);
   }
 
   // TODO FUNCIONES DEL SLIDER

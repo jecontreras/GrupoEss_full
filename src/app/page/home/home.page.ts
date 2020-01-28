@@ -1,31 +1,35 @@
-import { Component, ViewChildren } from '@angular/core';
+import { Component, ViewChildren, ViewChild, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ARTICULOS } from 'src/app/redux/interfax/articulos';
-import { IonSlides } from '@ionic/angular';
+import { IonSlides, LoadingController, IonSegment } from '@ionic/angular';
 import { CategoriaService } from 'src/app/service-component/categoria.service';
 import { AppService } from 'src/app/service-component/app.service';
 import { NameappAction, SearchAction } from 'src/app/redux/app.actions';
 import { Router } from '@angular/router';
 import { ReduxserService } from 'src/app/service-component/redux.service';
 import { DialogService } from 'src/app/service-component/dialog.service';
+import { ProductoService } from 'src/app/service-component/producto.service';
+import { FactoryModelService } from 'src/app/services/factory.model.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   public listado : any = [];
   public listhome: any = [];
   public searchtxt: any = '';
   public img:any = './assets/imagenes/dilisap1.png';
 
   public ev:any = {};
+  public evScroll:any = {};
   public disable_list:boolean = true;
 
   public data_user:any;
 
   @ViewChildren('slideWithNav') slideWithNav: IonSlides;
+  @ViewChild(IonSegment, {static: false}) segment: IonSegment;
 
   public sliderOne: any = {
     isBeginningSlide: true,
@@ -44,9 +48,22 @@ export class HomePage {
     slidesPerView: 3,
     autoplay: false
   };
+  slideOpts = {
+    slidesPerView: 1.5,
+    freeMode: true
+  }; 
 
   public data_app:any = {}
-
+  public seleccionado:string = '0';
+  public list_articulo:any = {
+    data:[]
+  };
+  public query:any = {
+    where:{},
+    skip: 0,
+    limit: 10
+  };
+  public loading:any;
 
   constructor( 
       private _categoria: CategoriaService,
@@ -54,9 +71,17 @@ export class HomePage {
       private _store: Store<ARTICULOS>,
       private _reduxer: ReduxserService,
       private router: Router,
-      private _Dialog_login: DialogService
+      private _Dialog_login: DialogService,
+      private _Producto: ProductoService,
+      public loadingController: LoadingController,
+      private _model: FactoryModelService
   ) {
     this.init_app();
+  }
+  ngOnInit(){
+    var intervalID = window.setTimeout(()=>{
+      if(Object.keys(this.sliderOne.slidesItems).length > 0) this.ajustandoSelect()
+    }, 500);
   }
   init_app(){
     this._store.select("name")
@@ -67,7 +92,7 @@ export class HomePage {
 
       if(Object.keys(store.categoria).length > 0) this.sliderOne.slidesItems= store.categoria;
     });
-    if(Object.keys(this.sliderOne.slidesItems).length === 0) this.get_categoria();
+    if(Object.keys(this.sliderOne.slidesItems).length === 0) {this.get_categoria()}
     if( Object.keys(this.data_app).length === 0 ) this.get_app();
   }
   doRefresh(ev){
@@ -98,22 +123,16 @@ export class HomePage {
         this.data_app = res;
         let accion:any = new NameappAction(res, 'post');
         this._store.dispatch(accion);
-      }else {
-        this.listhome = [
-          {
-            titulo: 'Últimos productos',
-            listado: this.listado,
-          },
-          {
-            titulo: 'Ofertas de equipos',
-            listado: this.listado,
-          },
-        ]
+      }
+    }, (err)=>{
+      if(this.ev){
+        this.disable_list = true;
+        if(this.ev.target){
+          this.ev.target.complete();
+        }
       }
     });
   }
-
-
 
   get_categoria(){
     return this._categoria.get({
@@ -129,6 +148,9 @@ export class HomePage {
       if(Object.keys(rta).length > 0) this.ajuste_categoria(rta);
       else this.ajuste_categoria();
       this._reduxer.data_redux((rta || []), 'categoria', []);
+      var intervalID = window.setTimeout(()=>{
+        this.ajustandoSelect();
+      }, 500);
     });
   }
   ajuste_categoria(obj:any =false){
@@ -146,16 +168,72 @@ export class HomePage {
           categoria: 'Planchas'
         },
       ];
+      this.sliderOne.slidesItems.unshift({id: 0, categoria: 'Para ti'});
   }
-  search(event:any){
+  ajustandoSelect(){
+    this.segment.value = this.sliderOne.slidesItems[0].id;
+  }
+  search(){
     // console.log(event);
-    let action = new SearchAction({txt: this.searchtxt}, 'post')
-    this._store.dispatch(action);
-    this.router.navigate(['/listproduct', 'buscador']);
+    if(this.seleccionado === '0'){
+      let action = new SearchAction({txt: this.searchtxt}, 'post')
+      this._store.dispatch(action);
+      this.router.navigate(['/listproduct', 'buscador']);
+    }else{
+      this.query.where.or = this.OR();
+      this.get_producto();
+    }
+  }
+  async loadings(){
+    this.loading = await this.loadingController.create({
+      spinner: 'crescent',
+      message: 'Iniciando...',
+      translucent: true,
+      cssClass: 'custom-class custom-loading'
+    });
+
+    await this.loading.present();
+  }
+  cambioCategoria(ev){
+    //console.log("***", ev)
+    let seleccionado:any = ev.detail.value.id;
+    if(!seleccionado && seleccionado !== 0) seleccionado = ev.detail.value;
+    this.seleccionado = seleccionado;
+    this.seleccionado = String(this.seleccionado);
+    if(this.seleccionado === '0') return true;
+    this.list_articulo.data = [];
+    this.query.skip=0;
+    this.query.where = {};
+    if(this.seleccionado === 'categoria'){
+    }else{
+      this.query.where.opcion = 'activo';
+      this.query.where.categoria = this.seleccionado;
+      this.loadings();
+      this.get_producto();
+    }
+    //this.router.navigate(['/listproduct', 123]);
+  }
+  get_producto(){
+    return this._Producto.get(this.query)
+    .subscribe((res:any)=>{
+      //console.log(res);
+      this.list_articulo.data.push(...res.data );
+      if( this.evScroll.target ){
+        this.evScroll.target.complete()
+      }
+      if(this.loading) this.loading.dismiss();
+    });
   }
 
-  cambioCategoria(){
-    this.router.navigate(['/listproduct', 123]);
+  iniciar_seccion(){
+    this._Dialog_login.open_registro();
+  }
+
+  loadData(ev){
+    //console.log(ev);
+    this.evScroll = ev;
+    this.query.skip++;
+    this.get_producto();
   }
 
    // TODO FUNCIONES DEL SLIDER
@@ -193,6 +271,42 @@ export class HomePage {
     slideView.isEnd().then((istrue) => {
       if(object)object.isEndSlide = istrue;
     });
+  }
+
+  //Buscador
+  OR(){
+    return [
+      {
+        codigo:{
+          contains: this.searchtxt || ''
+        }
+      },
+      {
+        titulo: {
+          contains: this.searchtxt || ''
+        }
+      },
+      {
+        slug: {
+          contains: this.searchtxt || ''
+        }
+      },
+      {
+        tipo:{
+          contains: this.searchtxt || ''
+        }
+      },
+      {
+        estado:{
+          contains: this.searchtxt || ''
+        }
+      },
+      {
+        opcion:{
+          contains: this.searchtxt || ''
+        }
+      }
+    ];
   }
 
 }

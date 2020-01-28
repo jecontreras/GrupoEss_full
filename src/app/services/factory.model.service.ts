@@ -11,6 +11,7 @@ import { MensajesAction, UserAction, NotificacionesAction, EventosAction, Usuari
 import { MENSAJES } from '../redux/interfax/mensajes';
 import { Store } from '@ngrx/store';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { ToastController } from '@ionic/angular';
 declare var io: any;
 
 @Injectable({
@@ -32,7 +33,8 @@ export class FactoryModelService {
     private _http: HttpClient,
     private router: Router,
     private _store: Store<MENSAJES>,
-    private localNotifications: LocalNotifications
+    private localNotifications: LocalNotifications,
+    public toastController: ToastController,
   ) {
     this.url = GLOBAL.url;
     this.global = GLOBAL;
@@ -50,14 +52,30 @@ export class FactoryModelService {
   }
 
   async createsocket(modelo: string, query: any) {
-    return new Promise(async (promesa) => {
-      query.modelo = modelo;
-      await this.sock.post(this.url + 'socket/emitir', query, (rta) => {
-        // console.log(rta, modelo);
-        promesa(rta)
+    try {
+      return new Promise(async (promesa) => {
+        query.modelo = modelo;
+        if(this.sock){
+          await this.sock.post(this.url + 'socket/emitir', query, (rta) => {
+            // console.log(rta, modelo);
+            promesa(rta)
+          });
+          promesa("exitoso");
+        }else{
+          const toast = await this.toastController.create({
+            message: "Error de Conexión",
+            duration: 2000
+          });
+          toast.present();    
+        }
+      })
+    } catch (error) {
+      const toast = await this.toastController.create({
+        message: "Error de Conexión",
+        duration: 2000
       });
-      promesa("exitoso");
-    })
+      toast.present();
+    }
 
   }
   create(modelo: string, query: any): Observable<Config> {

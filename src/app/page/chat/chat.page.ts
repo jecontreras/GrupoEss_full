@@ -23,7 +23,13 @@ export class ChatPage implements OnInit {
   public store:any;
   public disable_list: boolean = true;
   public ev:any;
-
+  public evScroll:any = {};
+  public query:any = {
+    where:{},
+    sort: 'updatedAt DESC',
+    skip: 0,
+    limit: 10
+  };
   constructor(
     private _store: Store<MENSAJES>,
     private router: Router,
@@ -45,7 +51,16 @@ export class ChatPage implements OnInit {
       if(Object.keys(this.data_user).length ===0){
         // this.router.navigate(['login']);
         this._Dialog_login.open_login();
-      }else if(Object.keys(this.list_mensajes).length === 0) this.get_chat();
+      }else if(Object.keys(this.list_mensajes).length === 0) {
+        this.query.where = {
+          or:[
+            {emisor: this.data_user.id},
+            {reseptor: this.data_user.id}
+          ],
+          articulo: {'!=': null}
+        };
+        this.get_chat();
+      }
   }
   ngOnInit() {
   }
@@ -54,21 +69,18 @@ export class ChatPage implements OnInit {
     this.ev = ev;
     this.disable_list = false;
     this._reduxer.delete_data('chat', this.list_mensajes);
+    this.query.where = {
+      or:[
+        {emisor: this.data_user.id},
+        {reseptor: this.data_user.id}
+      ],
+      articulo: {'!=': null}
+    };
     this.get_chat();
   }
 
   get_chat(){
-    let query:any = {
-      where:{
-        or:[
-          {emisor: this.data_user.id},
-          {reseptor: this.data_user.id}
-        ],
-        articulo: {'!=': null}
-      },
-      sort: 'updatedAt DESC'
-    }
-    return this._chat.get(query)
+    return this._chat.get(this.query)
     .subscribe((rta:any)=>{
       // console.log(rta, this.list_mensajes);
         if(this.ev){
@@ -79,7 +91,21 @@ export class ChatPage implements OnInit {
         }
         this._reduxer.data_redux(rta.data, 'chat', this.list_mensajes);
         this.list_mensajes = _.unionBy(this.list_mensajes || [], rta.data, 'id');
+    }, (err)=>{
+      if(this.ev){
+        this.disable_list = true;
+        if(this.ev.target){
+          this.ev.target.complete();
+        }
+      }
     });
+  }
+
+  loadData(ev){
+    //console.log(ev);
+    this.evScroll = ev;
+    this.query.skip++;
+    this.get_chat();
   }
 
   iniciar_chat(item:any){

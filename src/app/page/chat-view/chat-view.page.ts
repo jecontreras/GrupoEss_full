@@ -30,6 +30,7 @@ export class ChatViewPage implements OnInit {
   public unico:any = 0;
   public data_articulo:any = [];
   phone_model = 'iPhone';
+  nombreUser: string='';
   input = '';
   
   @ViewChild('content',{static: false} ) private content: any
@@ -114,6 +115,7 @@ export class ChatViewPage implements OnInit {
         row.user = row.emisor.username;
         if(!row.foto) row.foto = './assets/imagenes/perfil.png';
       }else{
+        this.nombreUser = row.emisor.username;
         row.sender = 0;
         row.foto = row.emisor.foto;
         row.user = row.emisor.username;
@@ -154,6 +156,13 @@ export class ChatViewPage implements OnInit {
       this.list_mensajes = _.unionBy(this.list_mensajes || [], this.list_mensajes, 'id');
       this.list_mensajes = _.orderBy(this.list_mensajes, ['createdAt'], ['asc']);
       
+    }, (err)=>{
+      if(this.ev){
+        this.disable_list = true;
+        if(this.ev.target){
+          this.ev.target.complete();
+        }
+      }
     });
   }
   create_form() {

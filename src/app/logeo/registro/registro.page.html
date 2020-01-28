@@ -1,5 +1,10 @@
 <ion-content id="ion-content-login">
-  <br><br>
+  <ion-toolbar id="ion-content-login">
+    <ion-button fill="clear" color="danger" slot="start" (click)="cerrar()">
+      <ion-icon name="backspace"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+  <br>
   <ion-toolbar id="ion-content-login">
     <div class="ion-text-center">
       <img class="logo2" [src]="'./assets/imagenes/Logo2.png'">
@@ -49,4 +54,5 @@
       <h6 (click)="cerrarModal()">¿Ya tienes cuenta?</h6>
     </ion-text>
   </div>
+
 </ion-content>

@@ -5,17 +5,23 @@ import { IonicModule } from '@ionic/angular';
 import { MenuComponent } from './menu/menu.component';
 import { RouterModule } from '@angular/router';
 import { PopinfoComponent } from './popinfo/popinfo.component';
+import { BuscadorComponent } from './buscador/buscador.component';
 
 @NgModule({
+  entryComponents:[
+    BuscadorComponent
+  ],
   declarations: [
     HeaderComponent,
     MenuComponent,
-    PopinfoComponent
+    PopinfoComponent,
+    BuscadorComponent
   ],
   exports: [
     HeaderComponent,
     MenuComponent,
-    PopinfoComponent
+    PopinfoComponent,
+    BuscadorComponent
   ],
   imports: [
     CommonModule,

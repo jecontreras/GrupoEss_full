@@ -75,6 +75,11 @@ const routes: Routes = [
     path: 'registro',
     loadChildren: () => import('./logeo/registro/registro.module').then( m => m.RegistroPageModule)
   },
+  {
+    path: 'listcategoria/:id',
+    loadChildren: () => import('./page/list-categoria/list-categoria.module').then( m => m.ListCategoriaPageModule)
+  },
+
 
 ];
 

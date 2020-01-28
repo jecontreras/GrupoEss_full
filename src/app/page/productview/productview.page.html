@@ -1,29 +1,20 @@
-<ion-header>
-  <ion-toolbar color="dark">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="2">
-         <ion-buttons>
-            <ion-menu-button>
-              <ion-icon class="padding_menu" size="large" name="menu"></ion-icon>
-            </ion-menu-button>
-          </ion-buttons>
-        </ion-col>
-        <ion-col size="8">
-          <ion-title class="ion-padding-top">
-            <img class="logo" [src]="'./assets/imagenes/Logo.png'">
-          </ion-title>
-        </ion-col>
-        <ion-col size="2">
-          <ion-icon class="logo_notificacion" size="large" name="cart" [routerLink]="['/chech']"></ion-icon>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-toolbar>
-</ion-header>
+<ion-header no-border translucent>
 
+  <ion-toolbar>
+    <ion-buttons slot="start" color="primary">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-button color="primary" (click)="openEndSearch()" fill="clear" slot="end">
+      <ion-icon name="search"></ion-icon>
+    </ion-button>
+    <ion-button (click)="ngOnInit()" color="primary" fill="clear" slot="end">
+      <ion-icon name="more"></ion-icon>
+    </ion-button>
+  </ion-toolbar>
+
+</ion-header>
 <ion-content>
-  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullMin="100" pullMax="100">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullMin="200" pullMax="200">
     <ion-refresher-content>
     </ion-refresher-content>
   </ion-refresher>
@@ -31,7 +22,7 @@
     <ion-row class="border">
       <ion-col size="12" class="paddin_grid">
         <!-- <ion-img *ngIf="data" [src]="data.foto"></ion-img> -->
-        <ion-slides class="alto_slide" *ngIf="data" pager="true" [options]="slideOptsOne" #slideWithNav
+        <ion-slides class="alto_slide" *ngIf="data" pager="true" [options]="slideOptsTho" #slideWithNav
           (ionSlideDidChange)="SlideDidChange(sliderOne,slideWithNav)">
           <ion-slide *ngFor="let s of sliderOne.slidesItems">
             <img class="ancho_slide" src="{{s.foto}}">
@@ -39,12 +30,24 @@
         </ion-slides>
       </ion-col>
       <ion-col size="12">
-        <ion-text class="ion-padding-top" color="dark">
+        <ion-text class="ion-padding-top" color="primary">
           <ion-label for="">{{ data.titulo }}</ion-label>
         </ion-text>
+        <p class="clasificacion">
+          <input id="radio1" type="radio" name="estrellas" value="5" [(ngModel)]="data.califica"><!--
+          --><label class="label" [ngClass]="{'checkcolor':data.Califica >=5}" for="radio1" >★</label><!--
+          --><input id="radio2" type="radio" name="estrellas" value="4" [(ngModel)]="data.califica"><!--
+          --><label class="label" [ngClass]="{'checkcolor':data.Califica >=4}" for="radio2">★</label><!--
+          --><input id="radio3" type="radio" name="estrellas" value="3" [(ngModel)]="data.califica"><!--
+          --><label class="label" [ngClass]="{'checkcolor':data.Califica >=3}" for="radio3">★</label><!--
+          --><input id="radio4" type="radio" name="estrellas" value="2" [(ngModel)]="data.califica"><!--
+          --><label class="label" [ngClass]="{'checkcolor':data.Califica >=2}" for="radio4">★</label><!--
+          --><input id="radio5" type="radio" name="estrellas" value="1" [(ngModel)]="data.califica"><!--
+          --><label class="label"  [ngClass]="{'checkcolor':data.Califica >=1}"for="radio5">★</label>
+        </p>
       </ion-col>
       <ion-col size="12">
-        <ion-text class="ion-padding-top" color="dark">
+        <ion-text class="ion-padding-top" color="dark" *ngIf="data.costopromosion || data.costoventa">
           <ion-label position="floating">Aprox.</ion-label>
           {{ ( data.costopromosion || data.costoventa || 0).toLocaleString('de-DE', { style: 'currency', currency: 'COP' }) }}
           <!-- <span>{{ data.envio || 'Envio Gratis'}}</span> -->
@@ -92,12 +95,10 @@
           <!-- <ion-button *ngIf="data.subasta" color="dark" expand="full" (click)="ofreciendo()"
             class="ion-padding ion-text-center button_col">
             ¡Ofertarlo!</ion-button> -->
-          <ion-button color="dark" expand="full" (click)="submit_cart('agregar')" class="ion-padding ion-text-center">Agregar al
-            carro de compras</ion-button>
-          <ion-button color="dark" expand="full" (click)="data_chat()" class="ion-padding ion-text-center">Consultar
-            o Cotizar</ion-button>
-          <ion-button color="dark" expand="full" (click)="fn_favorito(data)" class="ion-padding ion-text-center">Marcar
-            como favorito</ion-button>
+          <ion-button color="primary" fill="clear" expand="full" (click)="fn_favorito(data)" class="ion-padding ion-text-center">Agregar a favorito</ion-button>
+          <ion-button color="primary" expand="full" (click)="submit_cart('agregar')" class="ion-padding ion-text-center">Comprar</ion-button>
+          <!--<ion-button color="dark" expand="full" (click)="data_chat()" class="ion-padding ion-text-center">Consultar
+            o Cotizar</ion-button>-->
         </div>
       </ion-col>
       <!-- <ion-col size="12">
@@ -106,15 +107,21 @@
         </div>
       </ion-col> -->
       <ion-col size="12">
-        <div class="ion-text-center">
-        </div>
+        <ion-toolbar>
+          <ion-text color="primary">
+            <ion-label>Descripción del articulo</ion-label>
+          </ion-text>
+        </ion-toolbar>
+        <p [innerHtml]="data.descripcion"></p>
       </ion-col>
       <ion-col size="12">
         <ion-row>
-          <ion-col size="12" color="dark" class="text-white rounded negro mb-2">
-              <ion-text>
-                <h6 class="h6_margin">Sobre este artículo</h6>
+          <ion-col size="12">
+            <ion-toolbar>
+              <ion-text color="primary">
+                <ion-label>Sobre este artículo</ion-label>
               </ion-text>
+            </ion-toolbar>
           </ion-col>
           <ion-col>
             <ion-row *ngFor="let item of data.list_informacion" class="border_radius">
@@ -131,12 +138,6 @@
             </ion-row>
           </ion-col>
         </ion-row>
-        <ion-item-divider>
-          <ion-text class="ion-padding-top" color="dark" *ngIf="data.descripcion">
-            <h6>Descripción del articulo</h6>
-            <p [innerHtml]="data.descripcion"></p>
-          </ion-text>
-        </ion-item-divider>
       </ion-col>
       <!-- <ion-col size="12">
           <ion-toolbar color="dark" class="rounded">
@@ -216,10 +217,46 @@
 
         </ion-list>
       </ion-col> -->
-      <ion-col size="12" color="dark" class="text-white rounded negro mb-2">
-          <ion-text>
-            <h6 class="h6_margin">Otras personas también compraron</h6>
+      <ion-col size="12">
+        <ion-list>
+          <ion-list-header>
+            <ion-toolbar no-border>
+              <ion-text color="primary">
+                <ion-label> Calificar esta aplicacion</ion-label>
+              </ion-text><br>
+              <ion-text color="dark">
+                <ion-label class="subheader">Comparte tu Opinion con Otros Usuario</ion-label>
+              </ion-text>
+            </ion-toolbar>
+          </ion-list-header>
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="./assets/imagenes/perfil.png">
+            </ion-avatar>
+            <ion-label>
+              <h2>Finn</h2>
+              <h3>I'm a big deal</h3>
+              <p>Listen, I've had a pretty messed up day...</p>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-avatar slot="start">
+              <img src="./assets/imagenes/perfil.png">
+            </ion-avatar>
+            <ion-label>
+              <h2>Finn</h2>
+              <h3>I'm a big deal</h3>
+              <p>Listen, I've had a pretty messed up day...</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+      <ion-col size="12">
+        <ion-toolbar>
+          <ion-text color="primary">
+            <ion-label> Otras personas también compraron </ion-label>
           </ion-text>
+        </ion-toolbar>
       </ion-col>
       <ion-col size="12">
         <ion-slides pager="false" [options]="slideOptsFoor" #slideWithNav4
@@ -232,25 +269,11 @@
       </ion-col>
       <ion-col size="12">
         <div class="ion-text-center">
-          <ion-button color="dark" expand="full" class="ion-padding ion-text-center">Compartir</ion-button>
+          <ion-button color="primary" expand="full" class="ion-padding ion-text-center">Compartir</ion-button>
           <!-- <ion-button color="danger" expand="full" class="ion-padding ion-text-center">Denunciar un articulo
           </ion-button> -->
         </div>
         <br>
-      </ion-col>
-      <ion-col size="12" color="dark" class="text-white rounded negro mb-2">
-          <ion-text>
-            <h6 class="h6_margin">Otras articulos que te pueden gustar</h6>
-          </ion-text>
-      </ion-col>
-      <ion-col size="12">
-        <ion-slides pager="false" [options]="slideOptsFive" #slideWithNav5
-          (ionSlideDidChange)="SlideDidChange(sliderFive,slideWithNav5)">
-          <ion-slide class="border" *ngFor="let item of sliderThree.slidesItems"
-            [routerLink]="['/productoview', item.id]">
-            <img class="padding_img" src="{{item.foto || img}}">
-          </ion-slide>
-        </ion-slides>
       </ion-col>
     </ion-row>
   </ion-grid>

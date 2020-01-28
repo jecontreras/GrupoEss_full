@@ -26,6 +26,11 @@ export class ListproductPage implements OnInit {
     slidesPerView: 3,
     autoplay: false
   };
+  public evScroll:any = {};
+
+  public loading:any;
+  public ev:any = {};
+  public disable_list:boolean = true;
 
   constructor(
     private _Producto: ProductoService,
@@ -83,7 +88,36 @@ export class ListproductPage implements OnInit {
     .subscribe((res:any)=>{
       console.log(res);
       this.list_articulo = res;
+      if(this.ev){
+        this.disable_list = true;
+        if(this.ev.target){
+          this.ev.target.complete();
+        }
+      }
+      if( this.evScroll.target ){
+        this.evScroll.target.complete()
+      }
+      if(this.loading) this.loading.dismiss();
+    },(error)=>{
+      if(this.ev){
+        this.disable_list = true;
+        if(this.ev.target){
+          this.ev.target.complete();
+        }
+      }
     });
+  }
+  doRefresh(ev){
+    this.ev = ev;
+    this.disable_list = false;
+    this.get_producto();
+    
+  }
+  loadData(ev){
+    //console.log(ev);
+    this.evScroll = ev;
+    this.query.skip++;
+    this.get_producto();
   }
 
 }

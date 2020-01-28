@@ -1,25 +1,21 @@
-.welcome-card img {
-    max-height: 35vh;
-    overflow: hidden;
-  }
-  .img_dimenciones{
-      height: 177px;
-      width: 119px;
-      align-items: center;
-  }
-  .button_radius {
-    border-radius: 50px;
-    background: red;
-  }
-  .btn_home{
-    background: white;
-  }
-  .bg_secondary_light {
-    background-color: #e2e2e2;
-  }
-  .bg_dark_ {
-    background-color: #222428;
-  }
-  .border_radius{
-    border-radius: 10px;
-  }
+
+  .padding_car{
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    margin-right: 0px !important;
+    margin-top: 0px !important;  
+    margin-bottom: 0px !important; 
+    border-radius: 0px !important; 
+    font-size: 0px !important; 
+    -webkit-box-shado: 0 3px 1px -2px rgba(255,255,255,0.2), 0 2px 2px 0 rgba(255, 253, 253, 0.2), 0 1px 5px 0 rgba(255,255,255,0.2) !important;
+    box-shadow: 0 3px 1px -2px rgba(255,255,255,0.2), 0 2px 2px 0 rgba(255, 253, 253, 0.2), 0 1px 5px 0 rgba(255,255,255,0.2) !important;
+}
+.ion_list {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    margin-left: -28px !important;
+}
+
+.subheader {
+  font-size: 11px;
+}

@@ -11,6 +11,7 @@ import { USER } from './redux/interfax/user';
 import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { UsuarioAction } from './redux/app.actions';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-root',
@@ -19,8 +20,9 @@ import { UsuarioAction } from './redux/app.actions';
 })
 export class AppComponent {
   
-  componentes: Observable<Componente[]>;
+  componentes:Componente[];
   data:USER;
+  vandera:boolean = false;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
@@ -36,15 +38,25 @@ export class AppComponent {
     .subscribe((store:any)=>{
       // console.log(store);
       this.data = store.usuario ||  store.user || {};
+      if(this.data.id){
+        if(!this.vandera)this.cargarMenu();
+        this.vandera = true;
+      }
     });
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
+    this.platform.ready().then(async() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.componentes = this.dataService.getMenuOpts();
+      this.cargarMenu();
     });
+  }
+  cargarMenu(){
+    this.dataService.getMenuOpts().subscribe(rta=>{
+      this.componentes = rta
+      for(let row of this.componentes){ row.disabled = true; if((!this.data.id) && ( row.name === 'Mensaje' || row.name === 'Comprados')) row.disabled = false;}
+    })
   }
   iniciar_seccion(){
     this._Dialog_login.open_login();

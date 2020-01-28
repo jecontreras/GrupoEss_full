@@ -18,32 +18,14 @@ export class NotificacionesPage implements OnInit {
   public list_notificacion:any = [];
   public ev:any = {};
   public disable_list:boolean = true;
-
-  @ViewChildren('slideWithNav') slideWithNav: IonSlides;
-  @ViewChildren('slideWithNav2') slideWithNav2: IonSlides;
-  @ViewChildren('slideWithNav3') slideWithNav3: IonSlides;
-
-  sliderOne: any;
-  sliderTwo: any;
-  sliderThree: any;
-
-   //Configuration for each Slider
-   slideOptsOne = {
-    initialSlide: 0,
-    slidesPerView: 1,
-    autoplay:true
-  };
-  slideOptsTwo = {
-    initialSlide: 1,
-    slidesPerView: 2,
-    loop: true,
-    centeredSlides: true
-  };
-  slideOptsThree = {
-    initialSlide: 0,
-    slidesPerView: 3
-  };
   public data_user:any = {};
+  public query:any = {
+    where:{
+      reseptor: this.data_user.id
+    },
+    skip: 0
+  };
+  public evScroll:any = {};
 
   constructor(
     private _store: Store<NOTIFICACIONES>,
@@ -66,90 +48,6 @@ export class NotificacionesPage implements OnInit {
   }
 
   ngOnInit() {
-    //Item object for Nature
-    this.sliderOne =
-      {
-        isBeginningSlide: true,
-        isEndSlide: false,
-        slidesItems: [
-          {
-            id: 1,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 2,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 3,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 4,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 5,
-            image: './assets/imagenes/dilisap1.png'
-          }
-        ]
-      };
-    //Item object for Food
-    this.sliderTwo =
-      {
-        isBeginningSlide: true,
-        isEndSlide: false,
-        slidesItems: [
-          {
-            id: 6,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 7,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 8,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 9,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 10,
-            image: './assets/imagenes/dilisap1.png'
-          }
-        ]
-      };
-    //Item object for Fashion
-    this.sliderThree =
-      {
-        isBeginningSlide: true,
-        isEndSlide: false,
-        slidesItems: [
-          {
-            id: 11,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 12,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 13,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 14,
-            image: './assets/imagenes/dilisap1.png'
-          },
-          {
-            id: 15,
-            image: './assets/imagenes/dilisap1.png'
-          }
-        ]
-      };
   }
 
   doRefresh(ev){
@@ -159,11 +57,7 @@ export class NotificacionesPage implements OnInit {
   }
 
   async get_notificacion(){
-    return this._notificaion.get({
-      where:{
-        reseptor: this.data_user.id
-      }
-    })
+    return this._notificaion.get(this.query)
     .subscribe((rta:any)=>{
       // console.log(rta);
 
@@ -174,8 +68,24 @@ export class NotificacionesPage implements OnInit {
         }
       }
       this._reduxer.data_redux(rta.data, 'notificaciones', this.list_notificacion);
-      this.list_notificacion = rta.data;
+      this.list_notificacion.push(...rta.data );
+      if( this.evScroll.target ){
+        this.evScroll.target.complete()
+      }
+    }, (err)=>{
+      if(this.ev){
+        this.disable_list = true;
+        if(this.ev.target){
+          this.ev.target.complete();
+        }
+      }
     });
+  }
+  loadData(ev){
+    //console.log(ev);
+    this.evScroll = ev;
+    this.query.skip++;
+    this.get_notificacion();
   }
 
   view(item){

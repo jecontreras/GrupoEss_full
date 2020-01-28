@@ -1,4 +1,4 @@
-<ion-header>
+<!--<ion-header>
   <ion-toolbar color="dark">
     <ion-grid>
       <ion-row>
@@ -43,15 +43,6 @@
     </ion-segment-button>
 
   </ion-segment>
-  <!-- <ion-slides [options]="slideOptsOne" class="p-3 mb-2 bg_secondary_light text-white">
-    <ion-slide *ngFor="let s of sliderOne.slidesItems">
-      <ion-chip [routerLink]="['/listproduct', 123]" class="btn_home bg-dark text-white">
-        <ion-text>
-          <ion-label>{{ s.categoria }}</ion-label>
-        </ion-text>
-      </ion-chip>
-    </ion-slide>
-  </ion-slides> -->
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullMin="100" pullMax="100">
     <ion-refresher-content>
     </ion-refresher-content>
@@ -89,8 +80,6 @@
         <ion-col size="10">
           <ion-text>
             <ion-label color="dark">{{ item.titulo }}</ion-label>
-            <!-- <ion-chip outline color="primary"> -->
-            <!-- </ion-chip> -->
           </ion-text>
         </ion-col>
         <ion-col size="2">
@@ -125,4 +114,110 @@
       </ion-col>
     </ion-row>
   </ion-grid>
+</ion-content>-->
+<ion-content>
+  <br>
+  <ion-toolbar>
+
+    <ion-searchbar placeholder="Buscar Grupo Ess" animated [(ngModel)]="searchtxt" (change)="search()">
+    </ion-searchbar>
+    
+    <ion-segment scrollable mode="md" color="primary" (ionChange)="cambioCategoria( $event )">
+      <ion-segment-button mode="md" [value]="item.id" *ngFor="let item of sliderOne.slidesItems">
+        <ion-label text-capitalize> {{ item.categoria }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+  </ion-toolbar>
+  
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullMin="100" pullMax="100">
+    <ion-refresher-content>
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-grid *ngIf="seleccionado === '0'">
+    <ion-row>
+      <ion-col size="12" *ngFor="let info of data_app.detalleslist" >
+        <ion-toolbar no-border>
+          <ion-item>
+            <ion-text color="dark" class="margin_left_home">
+              <ion-label> {{ info.titulo }}...</ion-label>
+              <ion-label class="subheader">{{ info.subtitle || 'En Base a tus Compra'}}</ion-label>
+            </ion-text>
+            <ion-icon [routerLink]="['/listproduct', info.valor]" color="dark" slot="end" name="arrow-forward"></ion-icon>
+          </ion-item>
+        </ion-toolbar>
+        <br>
+        <ion-slides [options]="slideOpts">
+          <ion-slide *ngFor="let off of info.articulos" [routerLink]="['/listcategoria', off.id]">
+            <ion-card class="padding_car">
+              <img [src]="off.foto">
+              <ion-card-content no-border class="padding_car">
+                <ion-list class="ion_list">
+                  <ion-item>
+                    <ion-avatar slot="start">
+                      <img [src]="off.foto2">
+                    </ion-avatar>
+                    <ion-label>
+                      <h2>{{ off.categoria }}</h2>
+                      <p><ion-icon name="star-outline"></ion-icon>{{ off.descripcion }}</p>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+              </ion-card-content>
+            </ion-card>
+          </ion-slide>
+        </ion-slides>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-grid *ngIf="seleccionado === '0'">
+    <ion-row>
+      <ion-col size="12" (click)="iniciar_seccion()">
+        <ion-toolbar no-border>
+          <ion-item>
+            <ion-text color="dark" class="margin_left_home">
+              <ion-label> {{ (data_app['info']?.registroTitle) || 'Registrate ahora' }} </ion-label>
+              <ion-label class="subheader">{{ (data_app['info']?.registroSubtitle) || 'Pronto en Grupo ESS'}}</ion-label>
+            </ion-text>
+            <ion-icon color="dark" slot="end" name="arrow-forward"></ion-icon>
+          </ion-item>
+        </ion-toolbar>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div *ngIf="seleccionado !== '0'">
+    <ion-list>
+      <ion-item *ngFor="let item of list_articulo.data" [routerLink]="['/productoview', item.id]" class="p-1">
+        <div slot="start">
+          <img class="img_dimenciones rounded" [src]="item.foto">
+        </div>
+        <ion-label>
+          <h2>{{ item.titulo }}</h2>
+          <h3>{{ item.estado }}</h3>
+          <p>{{ item.costopromosion || item.costoventa  }}</p>
+          <p>¡Compralo ahora!</p>
+          <p>{{ item.envio || 'envio'}}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <div class="ion-text-center" *ngIf="list_articulo.data.length === 0">
+      <ion-text colo="dark">
+        <span>Lista Vacia</span>
+      </ion-text>
+    </div>
+  
+    <ion-infinite-scroll threshold="150px"
+                         (ionInfinite)="loadData( $event )"
+                        >
+      <ion-infinite-scroll-content loadingSpinner="crescent"
+                                   loadingtext="Cargando data..">
+  
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </div>
+
 </ion-content>

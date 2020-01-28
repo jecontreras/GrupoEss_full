@@ -6,7 +6,7 @@
     </ion-buttons>
     <ion-text>
       <ion-label>
-        Chat
+        {{ data.categoria }}
       </ion-label>
     </ion-text>
     <ion-button color="primary" fill="clear" slot="end" [routerLink]="['/chech']">
@@ -15,45 +15,30 @@
   </ion-toolbar>
 
 </ion-header>
-
 <ion-content>
+  <ion-row>
+    <ion-col>
+      <ion-searchbar placeholder="Buscar Ecomerce" [(ngModel)]="searchtxt" (change)="search()"> </ion-searchbar>
+    </ion-col>
+  </ion-row>
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullMin="100" pullMax="100">
     <ion-refresher-content>
     </ion-refresher-content>
   </ion-refresher>
-  <ion-list #lista>
-
-    <ion-item-sliding *ngFor="let item of list_mensajes; let idx=index">
-      
-      <ion-item>
-        <ion-avatar slot="start">
-          <img [src]="item.emisor.foto ">
-        </ion-avatar>
-        <ion-label (click)="iniciar_chat(item)">
-          
-          <h3>{{ item.emisor.username }}</h3>
-          <p>
-            Nuevo Mensaje {{ item.articulo.titulo }}
-          </p>
-          <p>
-            {{ item.mensaje }}
-          </p>
-        </ion-label>
-  
-      </ion-item>
-      <ion-item-options side="end">
-        
-        <ion-item-option color="danger" (click)="borrar(item, idx)">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
-        </ion-item-option>
-
-      </ion-item-options>
-      
-
-    </ion-item-sliding>
-    
+  <ion-list>
+    <ion-item *ngFor="let item of list_articulo.data" [routerLink]="['/productoview', item.id]" class="p-1">
+      <div slot="start">
+        <img class="img_dimenciones rounded" [src]="item.foto">
+      </div>
+      <ion-label>
+        <h2>{{ item.titulo }}</h2>
+        <h3>{{ item.estado }}</h3>
+        <p>{{ item.costopromosion || item.costoventa  }}</p>
+        <p>¡Compralo ahora!</p>
+        <p>{{ item.envio || 'envio'}}</p>
+      </ion-label>
+    </ion-item>
   </ion-list>
-
   <ion-infinite-scroll threshold="150px"
                          (ionInfinite)="loadData( $event )"
                         >
@@ -62,6 +47,4 @@
   
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>
-
-
 </ion-content>
